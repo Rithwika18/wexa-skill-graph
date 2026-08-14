@@ -203,6 +203,26 @@ COGNODB_DATABASE=cognodb
 AI_PROVIDER=rule_based
 ```
 
+### CognoDB Cloud Instance Setup
+
+To create and configure a free CognoDB Cloud database instance:
+1. Create an account or sign into **CognoDB Cloud**.
+2. Create a free `c0` instance.
+3. Select your preferred hosting region.
+4. Wait for instance provisioning to complete.
+5. Copy and save the generated **Bolt connection URI**.
+6. Securely save the generated `cognodb` username and password.
+7. Place these values into your local `.env` configuration file:
+
+```ini
+COGNODB_URI=bolt+s://<your-instance-id>.databases.cognodb.cloud
+COGNODB_USERNAME=cognodb
+COGNODB_PASSWORD=<your-password>
+COGNODB_DATABASE=cognodb
+```
+
+*(Note: Never commit `.env` or expose real credentials).*
+
 ---
 
 ## 7. Seeding the CognoDB Database
@@ -263,6 +283,20 @@ The web UI provides three dedicated workspaces:
 ### 3. 🕸️ Multi-Hop Graph Traversal Explorer
 - **Reachable Skills Traversal (2+ Hops)**: Select a starting skill and configure `min_hops` / `max_hops` to explore unlocked downstream capabilities.
 - **Common Prerequisite Foundation**: Select two distinct target skills (e.g. *NLP* and *PyTorch*) to discover shared foundational prerequisite competencies across arbitrary depths.
+
+### 4. 📸 UI Screenshots
+
+#### Career Role Roadmap
+![Career Role Roadmap](docs/screenshots/roadmap.png)
+*Interactive career role pathfinder displaying readiness score (16.7% match), acquired skills, missing requirements, and a 5-step milestone learning roadmap DAG.*
+
+#### AI Skill Extractor
+![AI Skill Extractor](docs/screenshots/skill-extractor.png)
+*AI/NLP skill extraction and normalization interface parsing unstructured job description text into canonical graph skills.*
+
+#### Multi-Hop Graph Traversal
+![Multi-Hop Graph Traversal](docs/screenshots/graph-traversal.png)
+*Multi-hop graph traversal (2-4 hops) and common prerequisite discovery identifying shared foundations between distinct technical domains.*
 
 ---
 
