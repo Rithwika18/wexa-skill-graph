@@ -4,6 +4,13 @@ An AI-powered Skill Graph application for intelligent skill extraction, canonica
 
 ---
 
+## Live Demo
+
+Live application:
+https://wexa-skill-graph.onrender.com
+
+---
+
 ## 1. Project Overview
 
 The **WEXA Skill Graph Application** is designed to address a fundamental challenge in technical career development and talent matching: navigating complex skill dependencies. In traditional systems, skills are represented as flat, disconnected keyword tags. However, real-world competencies form an interconnected dependency graph where foundational skills unlock intermediate capabilities, and multi-skill combinations are required for specialized career roles.
