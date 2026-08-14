@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEXA Skill Graph — AI & Graph Career Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="container header-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3"></circle>
+                        <circle cx="6" cy="12" r="3"></circle>
+                        <circle cx="18" cy="19" r="3"></circle>
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="brand-title">WEXA Skill Graph</h1>
+                    <p class="brand-subtitle">AI & Graph-Powered Career Intelligence</p>
+                </div>
+            </div>
+            <div class="header-status">
+                <span id="db-status-badge" class="status-badge status-loading">
+                    <span class="status-dot"></span>
+                    <span id="db-status-text">Checking Database...</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="nav-tabs-wrapper">
+        <div class="container">
+            <div class="nav-tabs" role="tablist">
+                <button class="tab-btn active" data-tab="tab-roles" role="tab" aria-selected="true">
+                    <span class="tab-icon">🎯</span>
+                    Career Role Roadmap
+                </button>
+                <button class="tab-btn" data-tab="tab-nlp" role="tab" aria-selected="false">
+                    <span class="tab-icon">🧠</span>
+                    AI Skill Extractor
+                </button>
+                <button class="tab-btn" data-tab="tab-graph" role="tab" aria-selected="false">
+                    <span class="tab-icon">🕸️</span>
+                    Graph Traversals
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <main class="container main-content">
+        <!-- GLOBAL ALERT BANNER -->
+        <div id="global-alert" class="alert-banner hidden">
+            <span id="alert-message"></span>
+            <button id="alert-close" class="alert-close-btn">&times;</button>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- SECTION 1: CAREER ROLE ROADMAP EXPLORER                      -->
+        <!-- ============================================================ -->
+        <section id="tab-roles" class="tab-pane active">
+            <div class="section-header">
+                <h2>Career Role Roadmap Explorer</h2>
+                <p>Select your target career role, check off the skills you already have, and generate a prerequisite-aware learning roadmap.</p>
+            </div>
+
+            <div class="grid-2-col">
+                <!-- Inputs Column -->
+                <div class="card">
+                    <h3 class="card-title">1. Configure Target & Skills</h3>
+                    
+                    <div class="form-group">
+                        <label for="role-select" class="form-label">Target Career Role</label>
+                        <select id="role-select" class="form-control">
+                            <option value="">-- Select a Career Role --</option>
+                        </select>
+                        <div id="role-meta-badge" class="role-meta hidden">
+                            <span class="meta-tag" id="role-domain-tag">Domain: </span>
+                            <span class="meta-tag" id="role-level-tag">Level: </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="skills-label-row">
+                            <label class="form-label">Select Your Acquired Skills</label>
+                            <div class="btn-group-sm">
+                                <button type="button" id="btn-select-all-skills" class="btn-text">Select All</button>
+                                <button type="button" id="btn-clear-skills" class="btn-text">Clear</button>
+                            </div>
+                        </div>
+                        <div id="skills-checkbox-grid" class="checkbox-grid">
+                            <div class="loading-state">
+                                <div class="spinner-sm"></div> Loading skill taxonomy...
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="btn-generate-roadmap" class="btn btn-primary btn-block" disabled>
+                        <span>🚀 Generate Role Roadmap</span>
+                    </button>
+                </div>
+
+                <!-- Results Column -->
+                <div class="card">
+                    <h3 class="card-title">2. Role Gap & Milestone Roadmap</h3>
+
+                    <!-- Loading State -->
+                    <div id="roles-loading" class="loading-state hidden">
+                        <div class="spinner"></div>
+                        <p>Traversing graph & computing optimal learning path...</p>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="roles-empty" class="empty-state">
+                        <div class="empty-icon">🎯</div>
+                        <h4>No Roadmap Generated Yet</h4>
+                        <p>Select a career role on the left and click <strong>Generate Role Roadmap</strong> to view your readiness score and step-by-step learning milestones.</p>
+                    </div>
+
+                    <!-- Output Container -->
+                    <div id="roles-result" class="result-container hidden">
+                        <!-- Readiness Score Card -->
+                        <div class="readiness-card">
+                            <div class="readiness-header">
+                                <span class="readiness-label">Role Readiness Score</span>
+                                <span id="readiness-badge" class="badge">0% Match</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div id="readiness-progress" class="progress-bar-fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Skills Comparison Grid -->
+                        <div class="skills-breakdown">
+                            <div class="breakdown-col">
+                                <h4>✅ Acquired Skills (<span id="acquired-count">0</span>)</h4>
+                                <div id="acquired-skills-tags" class="tag-cloud"></div>
+                            </div>
+                            <div class="breakdown-col">
+                                <h4>⚠️ Missing Required (<span id="missing-req-count">0</span>)</h4>
+                                <div id="missing-req-tags" class="tag-cloud"></div>
+                            </div>
+                        </div>
+
+                        <!-- Milestone Roadmap Steps -->
+                        <div class="roadmap-section">
+                            <h4>🗺️ Step-by-Step Learning Milestones</h4>
+                            <div id="roadmap-timeline" class="timeline"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- SECTION 2: AI RESUME / JOB DESCRIPTION EXTRACTOR             -->
+        <!-- ============================================================ -->
+        <section id="tab-nlp" class="tab-pane">
+            <div class="section-header">
+                <h2>AI Resume & Job Description Skill Extractor</h2>
+                <p>Extract and normalize technical skills from raw job descriptions, resume summaries, or project portfolios into canonical graph skills.</p>
+            </div>
+
+            <div class="grid-2-col">
+                <!-- Text Input Card -->
+                <div class="card">
+                    <div class="card-header-flex">
+                        <h3 class="card-title">1. Paste Unstructured Text</h3>
+                        <button type="button" id="btn-sample-nlp" class="btn-text">Insert Sample Job Description</button>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="nlp-input-text" class="form-control textarea-large" placeholder="Paste resume excerpt or job posting here (e.g. 'Seeking a Senior Machine Learning Specialist with extensive Python, Pandas, and SQL background, experienced in NLP and PyTorch model deployment...')."></textarea>
+                    </div>
+                    <div class="form-footer-flex">
+                        <span class="info-note">Powered by Modular AI Extractor (Zero-Cost / Offline Ready)</span>
+                        <button id="btn-extract-skills" class="btn btn-primary">
+                            <span>⚡ Extract & Normalize Skills</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Extraction Results Card -->
+                <div class="card">
+                    <h3 class="card-title">2. Extracted Canonical Skills</h3>
+
+                    <!-- Loading State -->
+                    <div id="nlp-loading" class="loading-state hidden">
+                        <div class="spinner"></div>
+                        <p>Extracting and normalizing skills against knowledge graph...</p>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="nlp-empty" class="empty-state">
+                        <div class="empty-icon">🧠</div>
+                        <h4>No Skills Extracted Yet</h4>
+                        <p>Paste text on the left and click <strong>Extract & Normalize Skills</strong> to parse mentions into canonical taxonomy nodes.</p>
+                    </div>
+
+                    <!-- Results -->
+                    <div id="nlp-result" class="result-container hidden">
+                        <div class="nlp-summary-bar">
+                            <span>Extracted Skills: <strong id="nlp-extracted-count">0</strong></span>
+                            <button id="btn-apply-to-roles" class="btn btn-secondary btn-sm">
+                                <span>🎯 Apply to Role Pathfinder</span>
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Raw Mention</th>
+                                        <th>Canonical Skill</th>
+                                        <th>Status in Graph</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="nlp-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- SECTION 3: MULTI-HOP GRAPH TRAVERSAL EXPLORER                -->
+        <!-- ============================================================ -->
+        <section id="tab-graph" class="tab-pane">
+            <div class="section-header">
+                <h2>Multi-Hop Graph Traversal Explorer</h2>
+                <p>Explore multi-hop relationships (2+ hops) and discover shared foundational prerequisites between diverse specializations using openCypher graph traversals.</p>
+            </div>
+
+            <div class="grid-2-col">
+                <!-- Panel A: 2+ Hop Reachable Traversal -->
+                <div class="card">
+                    <h3 class="card-title">Multi-Hop Reachable Traversal (2+ Hops)</h3>
+                    <p class="card-subtitle">Discover downstream skills unlocked after multiple stages of study from a starting skill.</p>
+
+                    <div class="form-group">
+                        <label for="reachable-start-skill" class="form-label">Starting Skill</label>
+                        <select id="reachable-start-skill" class="form-control">
+                            <option value="">-- Select Starting Skill --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="reachable-min-hops" class="form-label">Min Hops</label>
+                            <input type="number" id="reachable-min-hops" class="form-control" value="2" min="1" max="5">
+                        </div>
+                        <div class="form-group">
+                            <label for="reachable-max-hops" class="form-label">Max Hops</label>
+                            <input type="number" id="reachable-max-hops" class="form-control" value="4" min="1" max="6">
+                        </div>
+                    </div>
+
+                    <button id="btn-run-reachable" class="btn btn-primary btn-block">
+                        <span>🔍 Traverse Reachable Skills</span>
+                    </button>
+
+                    <!-- Reachable Output -->
+                    <div id="reachable-loading" class="loading-state hidden">
+                        <div class="spinner-sm"></div> Traversing graph paths...
+                    </div>
+                    <div id="reachable-empty" class="empty-state-sm">
+                        <p>Select a skill and click Traverse to view multi-hop reachable capabilities.</p>
+                    </div>
+                    <div id="reachable-result" class="result-box hidden">
+                        <div id="reachable-tags" class="tag-cloud"></div>
+                    </div>
+                </div>
+
+                <!-- Panel B: Common Prerequisite Foundation -->
+                <div class="card">
+                    <h3 class="card-title">Common Prerequisite Foundation</h3>
+                    <p class="card-subtitle">Graph-native query identifying shared foundational prerequisites connecting two distinct target skills.</p>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="common-skill-1" class="form-label">First Skill</label>
+                            <select id="common-skill-1" class="form-control">
+                                <option value="">-- Select Skill 1 --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="common-skill-2" class="form-label">Second Skill</label>
+                            <select id="common-skill-2" class="form-control">
+                                <option value="">-- Select Skill 2 --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="btn-run-common" class="btn btn-secondary btn-block">
+                        <span>🔗 Discover Common Foundation</span>
+                    </button>
+
+                    <!-- Common Output -->
+                    <div id="common-loading" class="loading-state hidden">
+                        <div class="spinner-sm"></div> Evaluating shared prerequisite paths...
+                    </div>
+                    <div id="common-empty" class="empty-state-sm">
+                        <p>Select two distinct skills (e.g. NLP and PyTorch) to discover their shared foundations.</p>
+                    </div>
+                    <div id="common-result" class="result-box hidden">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Foundational Skill</th>
+                                        <th>Dist to Skill 1</th>
+                                        <th>Dist to Skill 2</th>
+                                        <th>Total Hops</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="common-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+        <div class="container footer-container">
+            <p>WEXA AI Internship — Skill Graph Application &bull; CognoDB &bull; openCypher &bull; Flask</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APP -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
