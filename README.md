@@ -287,15 +287,15 @@ The web UI provides three dedicated workspaces:
 ### 4. 📸 UI Screenshots
 
 #### Career Role Roadmap
-![Career Role Roadmap](docs/screenshots/roadmap.png)
+![Career Role Roadmap](docs/screenshots/roadmap.jpg)
 *Interactive career role pathfinder displaying readiness score (16.7% match), acquired skills, missing requirements, and a 5-step milestone learning roadmap DAG.*
 
 #### AI Skill Extractor
-![AI Skill Extractor](docs/screenshots/skill-extractor.png)
+![AI Skill Extractor](docs/screenshots/skill-extractor.jpg)
 *AI/NLP skill extraction and normalization interface parsing unstructured job description text into canonical graph skills.*
 
 #### Multi-Hop Graph Traversal
-![Multi-Hop Graph Traversal](docs/screenshots/graph-traversal.png)
+![Multi-Hop Graph Traversal](docs/screenshots/graph-traversal.jpg)
 *Multi-hop graph traversal (2-4 hops) and common prerequisite discovery identifying shared foundations between distinct technical domains.*
 
 ---
