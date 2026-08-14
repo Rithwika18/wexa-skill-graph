@@ -35,23 +35,16 @@ A skill ecosystem is inherently a **Directed Acyclic Graph (DAG)** of prerequisi
 
 The graph database models skills, prerequisite dependencies, career roles, and requirements using labeled nodes, typed directed relationships, and rich properties.
 
-```
-       ┌─────────────────────────────────────────────────────────┐
-       │                   (:Role)                               │
-       │   - title: String  ("Machine Learning Engineer")        │
-       │   - domain: String ("AI & Machine Learning")            │
-       │   - level: String  ("Mid / Senior")                     │
-       └──────────────────────────┬──────────────────────────────┘
-                                  │
-                                  │ [:REQUIRES {importance: 'required' | 'preferred'}]
-                                  ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                               (:Skill)                                 │
-│   - name: String ("Python", "Pandas", "Machine Learning", "PyTorch")   │
-└───────────┬────────────────────────────────────────────────┬───────────┘
-            │                                                ▲
-            │ [:PREREQUISITE_OF]                             │ [:PREREQUISITE_OF]
-            └────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    R[Role<br/>title<br/>domain<br/>level]
+    S1[Skill<br/>name]
+    S2[Skill<br/>name]
+    S3[Skill<br/>name]
+
+    R -->|REQUIRES<br/>importance: required / preferred| S1
+    S1 -->|PREREQUISITE_OF| S2
+    S2 -->|PREREQUISITE_OF| S3
 ```
 
 ### Node Labels & Properties
